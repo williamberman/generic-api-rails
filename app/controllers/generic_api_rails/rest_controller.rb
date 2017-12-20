@@ -36,16 +36,20 @@ module GenericApiRails
     def singular_template_name
       @tmpl_name ||= @model.name.underscore
     end
-    
+
+    def template_or_jbuilder_exists?(tmpl)
+      template_exists?(tmpl=tmpl) or template_exists?(tmpl="#{tmpl}.json.jbuilder")
+    end
+
     def render_many rows,is_collection
       @is_collection = is_collection
-      
-      if template_exists?(tmpl="#{GAR}/#{ model.new.to_partial_path.pluralize }")
+
+        if template_or_jbuilder_exists?(tmpl="#{GAR}/#{ model.new.to_partial_path.pluralize }")
         locals = {}
         locals[@model.model_name.element.pluralize] = rows
         render tmpl, locals: locals
         true
-      elsif template_exists?(tmpl="#{GAR}/base/collection")
+      elsif template_or_jbuilder_exists?(tmpl="#{GAR}/base/collection")
         render tmpl, locals: { collection: rows }
         true
       else
@@ -55,12 +59,12 @@ module GenericApiRails
 
     def render_one row
       @is_collection = false
-      if template_exists?(tmpl="#{GAR}/#{ row.to_partial_path }")
+      if template_or_jbuilder_exists?(tmpl="#{GAR}/#{ row.to_partial_path }")
         locals = {}
         locals[model.model_name.element.to_sym] = row
         render tmpl, locals: locals
         true
-      elsif template_exists?(tmpl="#{GAR}/base/item")
+      elsif template_or_jbuilder_exists?(tmpl="#{GAR}/base/item")
         render tmpl, locals: { item: row }
         true
       else
