@@ -56,10 +56,10 @@ module GenericApiRails
         if template_or_jbuilder_exists?(tmpl="#{GAR}/#{ model.new.to_partial_path.pluralize }")
         locals = {}
         locals[@model.model_name.element.pluralize] = rows
-        render_wrapper tmpl, locals: locals
+        render_wrapper tmpl, locals
         true
       elsif template_or_jbuilder_exists?(tmpl="#{GAR}/base/collection")
-        render_wrapper tmpl, locals: { collection: rows }
+        render_wrapper tmpl, { collection: rows }
         true
       else
         false
@@ -71,10 +71,10 @@ module GenericApiRails
       if template_or_jbuilder_exists?(tmpl="#{GAR}/#{ row.to_partial_path }")
         locals = {}
         locals[model.model_name.element.to_sym] = row
-        render_wrapper tmpl, locals: locals
+        render_wrapper tmpl, locals
         true
       elsif template_or_jbuilder_exists?(tmpl="#{GAR}/base/item")
-        render_wrapper tmpl, locals: { item: row }
+        render_wrapper tmpl, { item: row }
         true
       else
         false
